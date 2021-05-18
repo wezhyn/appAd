@@ -45,12 +45,11 @@ export default class Pay extends Component {
     const signRes = await payNotify(orderId);
     const {sign} = signRes.data;
     if (sign) {
-      console.log(`order ${JSON.stringify(order)}`)
       let res = await payMock({id: orderId, totalAmount: num * price});
       if (res.code === 20000) {
         this.props.navigation.navigate('Order', {orderId: orderId});
       }
-      ToastAndroid.show(payRes.memo, ToastAndroid.SHORT);
+      ToastAndroid.show(res.message, ToastAndroid.SHORT);
     }
   };
 
