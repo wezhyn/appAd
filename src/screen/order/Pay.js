@@ -13,6 +13,7 @@ import Card from '~/component/Card';
 import {parseTime} from '~/utils/parse';
 import {getOrder, payNotify} from '~/api/order';
 import {realHeight} from '~/utils/height';
+import {payMock} from "../../api/order";
 
 export default class Pay extends Component {
   constructor(props) {
@@ -39,14 +40,17 @@ export default class Pay extends Component {
   };
 
   onPay = async () => {
-    const {orderId} = this.state;
+    const {order,orderId} = this.state;
+    const {num, price} = this.state.order;
     const signRes = await payNotify(orderId);
     const {sign} = signRes.data;
     if (sign) {
-      Alipay.setAlipaySandbox(true);
-      const payRes = await Alipay.pay(sign);
+      console.log(`order ${JSON.stringify(order)}`)
+      let res = await payMock({id: orderId, totalAmount: num * price});
+      if (res.code === 20000) {
+        this.props.navigation.navigate('Order', {orderId: orderId});
+      }
       ToastAndroid.show(payRes.memo, ToastAndroid.SHORT);
-      this.props.navigation.navigate('Order', {orderId: orderId});
     }
   };
 

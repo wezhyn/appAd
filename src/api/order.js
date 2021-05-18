@@ -21,6 +21,14 @@ export function payNotify(orderId) {
   });
 }
 
+export function payMock(params) {
+  return request({
+    url: '/pay/mock' ,
+    method: 'post',
+    params,
+  });
+}
+
 export function getOrderList(params) {
   return request({
     url: '/order/list',
